@@ -345,8 +345,8 @@ namespace Expoware.Youbiquitous.Extensions
         {
             if (!theString.IsValidEmail())
                 return theString;
-            var anchorText = String.Format(textFormat, theString);
-            return String.Format("<a href=mailto:{0}>{1}</a>", theString, anchorText);
+            var anchorText = string.Format(textFormat, theString);
+            return $"<a href=mailto:{theString}>{anchorText}</a>";
         }
     }
 }
