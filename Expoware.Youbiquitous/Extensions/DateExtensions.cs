@@ -12,6 +12,15 @@ namespace Expoware.Youbiquitous.Extensions
 {
     public static class DateExtensions
     {
+        private const string DateYears = "years";
+
+        /// <summary>
+        /// Formats the date as usual and returns the specified empty string otherwise
+        /// </summary>
+        /// <param name="theDate">Original date</param>
+        /// <param name="format">Date format</param>
+        /// <param name="empty">String if it's empty</param>
+        /// <returns></returns>
         public static string ToStringOrEmpty(this DateTime theDate, string format, string empty = "")
         {
             if (theDate == DateTime.MinValue || theDate == DateTime.MaxValue)
@@ -20,11 +29,24 @@ namespace Expoware.Youbiquitous.Extensions
             return theDate.ToString(format);
         }
 
+        /// <summary>
+        /// Formats the (nullable) date as usual and returns the specified empty string otherwise
+        /// </summary>
+        /// <param name="theDate">Original date</param>
+        /// <param name="format">Date format</param>
+        /// <param name="empty">String if it's empty</param>
+        /// <returns>String</returns>
         public static string ToStringOrEmpty(this DateTime? theDate, string format, string empty = "")
         {
             return theDate.GetValueOrDefault().ToStringOrEmpty(format);
         }
 
+        /// <summary>
+        /// Date expressed as years (age)
+        /// </summary>
+        /// <param name="theDate">Original date</param>
+        /// <param name="empty">String if it's empty</param>
+        /// <returns>String</returns>
         public static string ToYearsOrEmpty(this DateTime theDate, string empty = "")
         {
             if (theDate == DateTime.MinValue)
@@ -33,24 +55,49 @@ namespace Expoware.Youbiquitous.Extensions
             return ComputeYears(theDate).ToString();
         }
 
+        /// <summary>
+        /// Nullable date expressed as years (age)
+        /// </summary>
+        /// <param name="theDate">Original date</param>
+        /// <param name="empty">String if it's empty</param>
+        /// <returns></returns>
         public static string ToYearsOrEmpty(this DateTime? theDate, string empty = "")
         {
             return theDate.GetValueOrDefault().ToYearsOrEmpty(empty);
         }
 
+        /// <summary>
+        /// Compute years and adds "years"
+        /// </summary>
+        /// <param name="theDate">Original date</param>
+        /// <param name="empty">String if it's empty</param>
+        /// <returns>String</returns>
         public static string ToAge(this DateTime theDate, string empty = "")
         {
             if (theDate == DateTime.MinValue)
                 return empty;
 
-            return String.Format("{0} {1}", ComputeYears(theDate), Strings_Core.Date_Years);
+            return $"{ComputeYears(theDate)} {DateYears}";
         }
 
+        /// <summary>
+        /// Compute years and adds "years"
+        /// </summary>
+        /// <param name="theDate">Original nullable date</param>
+        /// <param name="empty">String if it's empty</param>
+        /// <returns>String</returns> 
         public static string ToAge(this DateTime? theDate, string empty = "")
         {
             return theDate.GetValueOrDefault().ToAge(empty);
         }
 
+        /// <summary>
+        /// Format nullable dates
+        /// </summary>
+        /// <param name="theDate">Original date</param>
+        /// <param name="format">Date format</param>
+        /// <param name="empty">String if it's empty</param>
+        /// <returns>String</returns>
         public static string Format(this DateTime? theDate, string format, string empty = "")
         {
             if (theDate == DateTime.MinValue || !theDate.HasValue)
@@ -59,101 +106,16 @@ namespace Expoware.Youbiquitous.Extensions
             return theDate.Value.ToString(format);
         }
 
-        public static DateTime? Timezone(this DateTime? theDate, double gmtOffset = 0)
-        {
-            if (theDate == DateTime.MinValue || !theDate.HasValue || gmtOffset.Equals(0))
-                return theDate;
-
-            var mins = gmtOffset * 60;
-            return theDate.Value.AddMinutes(mins);
-        }
-
-        public static string HumanizeElapsedTime(this DateTime theDate, string format = "{0}", string empty = "")
-        {
-            if (theDate == DateTime.MinValue)
-                return empty;
-
-            // Timespan
-            var ts = DateTime.UtcNow.Date - theDate;
-            var days = ts.TotalDays;
-            if (days < 0)
-                return empty;
-
-            if (days < 1 && DateTime.Today == theDate.Date)
-                return String.Format(format, Strings_Core.Date_Today).ToLower();
-            if (days < 2)
-                return String.Format(format, Strings_Core.Date_Yesterday).ToLower();
-            if (days < 8)
-                return String.Format(format, Strings_Core.Date_LastWeek).ToLower();
-            if (days < 18)
-                return String.Format(format, Strings_Core.Date_AboutTwoWeeksAgo).ToLower();
-            if (days < 50)
-                return String.Format(format, Strings_Core.Date_AboutOneMonthAgo).ToLower();
-            var months = days / 30;
-
-            //var result = String.Format("{0} {1}", (int) months, Strings_Core.DaysAgo);
-            var result = String.Format("{0} {1}", (int)months, Strings_Core.Date_MonthsAgo);
-            return String.Format(format, result);
-        }
-
-        public static string HumanizeElapsedTime(this DateTime? theDate, string format = "{0}", string empty = "")
-        {
-            if (theDate == DateTime.MinValue || !theDate.HasValue)
-                return empty;
-
-            return theDate.Value.HumanizeElapsedTime(format, empty);
-        }
-
-        public static string HumanizeForwardTime(this DateTime theDate, string format = "{0}", string empty = "")
-        {
-            if (theDate == DateTime.MaxValue)
-                return empty;
-
-            // Timespan
-            var ts = theDate.Date - DateTime.Today;
-            var days = ts.TotalDays;
-            if (days < 0)
-                return String.Format(format, Strings_Core.Date_Expired).ToLower();
-            if (days < 1 && DateTime.Today == theDate.Date)
-                return String.Format(format, Strings_Core.Date_Today).ToLower();
-            if (days < 2)
-                return String.Format(format, Strings_Core.Date_Tomorrow).ToLower();
-            if (days < 8)
-                return String.Format(format, Strings_Core.Date_NextWeek).ToLower();
-            if (days < 18)
-                return String.Format(format, Strings_Core.Date_InAboutTwoWeeks).ToLower();
-            if (days < 50)
-                return String.Format(format, Strings_Core.Date_InAboutOneMonth).ToLower();
-            var months = days / 30;
-
-            //var result = String.Format("{0} {1}", (int) months, Strings_Core.DaysAgo);
-            var result = String.Format("{0} {1}", (int)months, Strings_Core.Date_InMonths);
-            return String.Format(format, result);
-        }
-
-        public static string HumanizeForwardTime(this DateTime? theDate, string format = "{0}", string empty = "")
-        {
-            if (theDate == DateTime.MaxValue || !theDate.HasValue)
-                return empty;
-
-            return theDate.Value.HumanizeForwardTime(format, empty);
-        }
-
-        public static string HumanizeDistance(this DateTime theDate)
-        {
-            var elapsed = HumanizeElapsedTime(theDate);
-            if (elapsed.IsNullOrWhitespace())
-                return HumanizeForwardTime(theDate);
-            return elapsed;
-        }
-
-        public static string HumanizeDistance(this DateTime? theDate)
-        {
-            if (theDate.HasValue)
-                return HumanizeDistance(theDate.Value);
-            return "";
-        }
-
+        /// <summary>
+        /// Renders a date range nicely for the UI
+        /// </summary>
+        /// <param name="from">Initial date</param>
+        /// <param name="to">Final date</param>
+        /// <param name="dateFormat">Date format</param>
+        /// <param name="sep">Range separator</param>
+        /// <param name="css">Optional CSS </param>
+        /// <param name="empty">String if it's empty</param>
+        /// <returns></returns>
         public static string ToRangeFrom(this DateTime from, DateTime to, 
             string dateFormat = "d MMM", string sep = "-",
             string css = "", string empty = "")
@@ -163,29 +125,16 @@ namespace Expoware.Youbiquitous.Extensions
                 return text;
 
             if (!css.IsNullOrWhitespace())
-                sep = String.Format("<span class='{0}'>&nbsp;{1}&nbsp;</span>", css, sep);
+                sep = $"<span class='{css}'>&nbsp;{sep}&nbsp;</span>";
 
-            return String.Format("{0} {1} {2}",
-                    from.ToString(dateFormat),
-                    sep,
-                    to.ToString(dateFormat));
+            return $"{@from.ToString(dateFormat)} {sep} {to.ToString(dateFormat)}";
         }
 
-        private static Int32 ComputeYears(DateTime dob)
-        {
-            var today = DateTime.Today;
-
-            var a = (today.Year * 100 + today.Month) * 100 + today.Day;
-            var b = (dob.Year * 100 + dob.Month) * 100 + dob.Day;
-
-            var years = (a - b) / 10000;
-            return years;
-        }
-
-
-
-
-        // CultureInfo
+        /// <summary>
+        /// Returns week days
+        /// </summary>
+        /// <param name="theCulture">Culture info</param>
+        /// <returns>List of strings</returns>
         public static List<string> WeekDays(this CultureInfo theCulture)
         {
             var listOfDayNames = new List<string>(theCulture.DateTimeFormat.DayNames);
@@ -198,5 +147,24 @@ namespace Expoware.Youbiquitous.Extensions
             }
             return listOfDayNames;
         }
+
+        #region PRIVATE
+        /// <summary>
+        /// Calculate years to date
+        /// </summary>
+        /// <param name="dob"></param>
+        /// <returns></returns>
+        private static int ComputeYears(DateTime dob)
+        {
+            var today = DateTime.Today;
+
+            var a = (today.Year * 100 + today.Month) * 100 + today.Day;
+            var b = (dob.Year * 100 + dob.Month) * 100 + dob.Day;
+
+            var years = (a - b) / 10000;
+            return years;
+        }
+
+        #endregion
     }
 }

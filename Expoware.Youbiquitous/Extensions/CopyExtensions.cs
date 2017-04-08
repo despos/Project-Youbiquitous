@@ -25,50 +25,35 @@ namespace Expoware.Youbiquitous.Extensions
         {
             // If any this null throw an exception
             if (source == null || destination == null)
-                throw new Exception("Source or/and Destination Objects are null");
+                throw new Exception("Invalid source/destination");
+
             // Getting the Types of the objects
-            Type typeDest = destination.GetType();
-            Type typeSrc = source.GetType();
+            var typeDest = destination.GetType();
+            var typeSrc = source.GetType();
 
             // Iterate the Properties of the source instance and  
             // populate them from their desination counterparts  
-            PropertyInfo[] srcProps = typeSrc.GetProperties();
-            foreach (PropertyInfo srcProp in srcProps)
+            var srcProps = typeSrc.GetProperties();
+            foreach (var srcProp in srcProps)
             {
                 if (!srcProp.CanRead)
-                {
                     continue;
-                }
-                PropertyInfo targetProperty = typeDest.GetProperty(srcProp.Name);
+                var targetProperty = typeDest.GetProperty(srcProp.Name);
                 if (targetProperty == null)
-                {
                     continue;
-                }
                 if (!targetProperty.CanWrite)
-                {
                     continue;
-                }
                 if (targetProperty.GetSetMethod(true) != null && targetProperty.GetSetMethod(true).IsPrivate)
-                {
                     continue;
-                }
                 if ((targetProperty.GetSetMethod() == null))
-                {
                     continue;
-                }
                 if ((targetProperty.GetSetMethod().Attributes & MethodAttributes.Static) != 0)
-                {
                     continue;
-                }
                 if (!targetProperty.PropertyType.IsAssignableFrom(srcProp.PropertyType))
-                {
                     continue;
-                }
-                //
                 if (skipTheseProps.Contains(srcProp.Name, StringComparer.CurrentCultureIgnoreCase))
-                {
                     continue;
-                }
+
                 // Passed all tests, lets set the value
                 targetProperty.SetValue(destination, srcProp.GetValue(source, null), null);
             }
