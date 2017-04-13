@@ -1,6 +1,6 @@
 ﻿///////////////////////////////////////////////////////////////////
 //
-// Youbiquitous
+// Youbiquitous v1.0
 // Author: Dino Esposito
 //
 
@@ -24,7 +24,7 @@ namespace Expoware.Youbiquitous.Extensions
         }
 
         /// <summary>
-        /// 
+        /// DistinctBy function on Enumerable objects
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <typeparam name="TKey"></typeparam>

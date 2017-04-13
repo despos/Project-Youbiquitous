@@ -1,6 +1,6 @@
 ﻿///////////////////////////////////////////////////////////////////
 //
-// Youbiquitous
+// Youbiquitous v1.0
 // Author: Dino Esposito
 //
 
@@ -322,7 +322,11 @@ namespace Expoware.Youbiquitous.Extensions
 
             var cultureInfo = Thread.CurrentThread.CurrentCulture;
             var textInfo = cultureInfo.TextInfo;
-            return textInfo.ToTitleCase(theString);
+            var buffer = textInfo.ToTitleCase(theString.ToLower());
+            buffer = Regex.Replace(buffer, "['-](?:.)", m => m.Value.ToUpperInvariant());
+
+            // Should also fix things like "McDonald" to avoid to be "Mcdonald"
+            return buffer;
         }
 
         /// <summary>
@@ -330,7 +334,7 @@ namespace Expoware.Youbiquitous.Extensions
         /// </summary>
         /// <param name="theString">Original string</param>
         /// <returns>Modified string</returns>
-        public static string EnsureTrimmed(this string theString)
+        public static string TrimOrDefault(this string theString)
         {
             return theString.IsNullOrWhitespace() ? null : theString.Trim();
         }

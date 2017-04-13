@@ -1,6 +1,6 @@
 ﻿///////////////////////////////////////////////////////////////////
 //
-// Youbiquitous
+// Youbiquitous v1.0
 // Author: Dino Esposito
 //
 
@@ -92,21 +92,6 @@ namespace Expoware.Youbiquitous.Extensions
         }
 
         /// <summary>
-        /// Format nullable dates
-        /// </summary>
-        /// <param name="theDate">Original date</param>
-        /// <param name="format">Date format</param>
-        /// <param name="empty">String if it's empty</param>
-        /// <returns>String</returns>
-        public static string Format(this DateTime? theDate, string format, string empty = "")
-        {
-            if (theDate == DateTime.MinValue || !theDate.HasValue)
-                return empty;
-
-            return theDate.Value.ToString(format);
-        }
-
-        /// <summary>
         /// Renders a date range nicely for the UI
         /// </summary>
         /// <param name="from">Initial date</param>
@@ -127,7 +112,7 @@ namespace Expoware.Youbiquitous.Extensions
             if (!css.IsNullOrWhitespace())
                 sep = $"<span class='{css}'>&nbsp;{sep}&nbsp;</span>";
 
-            return $"{@from.ToString(dateFormat)} {sep} {to.ToString(dateFormat)}";
+            return $"{from.ToString(dateFormat)} {sep} {to.ToString(dateFormat)}";
         }
 
         /// <summary>

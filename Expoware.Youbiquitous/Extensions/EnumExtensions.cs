@@ -1,6 +1,6 @@
 ﻿///////////////////////////////////////////////////////////////////
 //
-// Youbiquitous
+// Youbiquitous v1.0
 // Author: Dino Esposito
 //
 
@@ -18,6 +18,12 @@ namespace Expoware.Youbiquitous.Extensions
 
     public static class EnumExtensions
     {
+        /// <summary>
+        /// Cast to given type (if possible)
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="val">value</param>
+        /// <returns></returns>
         public static T As<T>(this Enum val)
         {
             var enumType = val.GetType();
@@ -25,18 +31,35 @@ namespace Expoware.Youbiquitous.Extensions
             return (T)enumValue;
         }
 
-        public static T Parse<T>(this String name) where T : struct
+        /// <summary>
+        /// Get an enum value from matching string name
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="name">String of enum entry</param>
+        /// <returns></returns>
+        public static T Parse<T>(this string name) where T : struct
         {
             return (T)Enum.Parse(typeof(T), name);
         }
 
-        public static String GetDescription(this Enum val)
+        /// <summary>
+        /// Returns the value of the [Description] attribute if any
+        /// </summary>
+        /// <param name="val">Enum value</param>
+        /// <returns></returns>
+        public static string GetDescription(this Enum val)
         {
             var field = val.GetType().GetField(val.ToString());
             var attributes = (DescriptionAttribute[])field.GetCustomAttributes(typeof(DescriptionAttribute), false);
             return attributes.Length > 0 ? attributes[0].Description : val.ToString();
         }
 
+        /// <summary>
+        /// Returns all items in the enum as an EnumItem list
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="enumeration"></param>
+        /// <returns></returns>
         public static IList<EnumItem<T>> GetItems<T>(this Enum enumeration)
         {
             var enumType = enumeration.GetType();
@@ -50,6 +73,7 @@ namespace Expoware.Youbiquitous.Extensions
             return items;
         }
 
+        #region PRIVATE
         private static EnumItem<T> GetDescriptionInternal<T>(object val)
         {
             var field = val.GetType().GetField(val.ToString());
@@ -62,5 +86,6 @@ namespace Expoware.Youbiquitous.Extensions
             };
             return enumItem;
         }
+        #endregion
     }
 }

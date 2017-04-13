@@ -1,6 +1,6 @@
 ﻿///////////////////////////////////////////////////////////////////
 //
-// Youbiquitous
+// Youbiquitous v1.0
 // Author: Dino Esposito
 //
 
@@ -11,7 +11,7 @@ using System.Reflection;
 namespace Expoware.Youbiquitous.Extensions
 {
     /// <summary>
-    /// A static class for reflection type functions
+    /// A static class for reflection functions
     /// </summary>
     public static class CopyExtensions
     {
