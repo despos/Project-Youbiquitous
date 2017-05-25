@@ -10,30 +10,29 @@ using System.Web.Mvc;
 
 namespace Expoware.Youbiquitous.Mvc.Results
 {
-
-    public class MultipleViewResult : JsonResult
+    public class MultipleActionResult : ActionResult
     {
         public const string ChunkSeparator = "---|||---";
 
-        public IList<PartialViewResult> PartialViewResults { get; private set; }
+        public IList<ActionResult> ActionResults { get; }
 
-        public MultipleViewResult(params PartialViewResult[] views)
+        public MultipleActionResult(params ActionResult[] results)
         {
-            if (PartialViewResults == null)
-                PartialViewResults = new List<PartialViewResult>();
-            foreach (var v in views)
-                PartialViewResults.Add(v);
+            if (ActionResults == null)
+                ActionResults = new List<ActionResult>();
+            foreach (var r in results)
+                ActionResults.Add(r);
         }
 
         public override void ExecuteResult(ControllerContext context)
         {
             if (context == null)
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
 
-            var total = PartialViewResults.Count;
+            var total = ActionResults.Count;
             for (var index = 0; index < total; index++)
             {
-                var pv = PartialViewResults[index];
+                var pv = ActionResults[index];
 
                 // By design, the MODEL is a shared location that refers to the single
                 // rendering request. We're trying to render multiple blocks in the context of the 
@@ -41,7 +40,12 @@ namespace Expoware.Youbiquitous.Mvc.Results
                 // No big deal if all partial views get the same model; but if it's different
                 // we must store each model in a ViewData entry using anything like the view name 
                 // as the key. And set back the "right" model here before proceeding.
-                pv.ViewData.Model = pv.ViewData[pv.ViewName];
+                var result = pv as ViewResult;
+                if (result != null)
+                {
+                    var viewResult = result;
+                    viewResult.ViewData.Model = viewResult.ViewData[viewResult.ViewName];
+                }
 
                 // Render the view
                 pv.ExecuteResult(context);
@@ -49,6 +53,5 @@ namespace Expoware.Youbiquitous.Mvc.Results
                     context.HttpContext.Response.Output.Write(ChunkSeparator);
             }
         }
-
     }
 }
