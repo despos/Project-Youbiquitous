@@ -28,6 +28,8 @@ namespace Expoware.Youbiquitous.Mvc.Filters
                 response.Filter = new DeflateStream(response.Filter, CompressionMode.Compress);
         }
 
+
+        #region PRIVATE
         private static CompressionScheme GetPreferredEncoding(HttpRequestBase request)
         {
             var acceptableEncoding = request.Headers["Accept-Encoding"].ToLower();
@@ -46,5 +48,6 @@ namespace Expoware.Youbiquitous.Mvc.Filters
             Deflate = 1,
             Identity = 2
         }
+        #endregion
     }
 }

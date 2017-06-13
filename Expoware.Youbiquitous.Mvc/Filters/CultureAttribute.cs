@@ -17,9 +17,13 @@ namespace Expoware.Youbiquitous.Mvc.Filters
     {
         private const String CookieLangEntry = "language";
 
-        public String Name { get; set; }
-        public static String CookieName => "_Culture";
+        public string Name { get; set; }
+        public static string CookieName => "_YBQ_Culture_";
 
+        /// <summary>
+        /// ASP.NET MVC preliminary step in any controller method
+        /// </summary>
+        /// <param name="filterContext">Execution context of the filter</param>
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var culture = Name;
@@ -33,15 +37,26 @@ namespace Expoware.Youbiquitous.Mvc.Filters
             base.OnActionExecuting(filterContext);
         }
 
-        public static void SavePreferredCulture(HttpResponseBase response, String language,
-            Int32 expireDays = 1)
+        /// <summary>
+        /// Saves the specified language to the culture cookie
+        /// </summary>
+        /// <param name="response">HTTP response</param>
+        /// <param name="language">Code for the language</param>
+        /// <param name="expireDays">Expires in given number of days</param>
+        public static void SavePreferredCulture(HttpResponseBase response, 
+            string language, int expireDays = 1)
         {
             var cookie = new HttpCookie(CookieName) { Expires = DateTime.UtcNow.AddDays(expireDays) };
             cookie.Values[CookieLangEntry] = language;
             response.SetCookie(cookie);
         }
 
-        public static String GetSavedCultureOrDefault(HttpRequestBase httpRequestBase)
+        /// <summary>
+        /// Read the current language in the culture cookie
+        /// </summary>
+        /// <param name="httpRequestBase">HTTP request</param>
+        /// <returns>String</returns>
+        public static string GetSavedCultureOrDefault(HttpRequestBase httpRequestBase)
         {
             var culture = Thread.CurrentThread.CurrentCulture.Name;
             var cookie = httpRequestBase.Cookies[CookieName];
@@ -53,11 +68,21 @@ namespace Expoware.Youbiquitous.Mvc.Filters
             return culture;
         }
 
-        private static void SetCultureOnThread(String language)
+        /// <summary>
+        /// Registers the Culture attribute globally
+        /// </summary>
+        public static void Register()
+        {
+            GlobalFilters.Filters.Add(new CultureAttribute());
+        }
+
+        #region PRIVATE
+        private static void SetCultureOnThread(string language)
         {
             var cultureInfo = CultureInfo.CreateSpecificCulture(language);
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
         }
+        #endregion
     }
 }
