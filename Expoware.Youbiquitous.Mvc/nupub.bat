@@ -1,0 +1,1 @@
+nuget pack expoware.youbiquitous.mvc.csproj -properties configuration=release
