@@ -69,9 +69,11 @@
     <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Features\AutoComplete\AutoCompleteItem.cs" />
     <Compile Include="Features\Localization\CultureManager.cs" />
+    <Compile Include="Filters\ExtendedAuthorizeAttribute.cs" />
     <Compile Include="Filters\CompressAttribute.cs" />
     <Compile Include="Filters\AddHeaderAttribute.cs" />
     <Compile Include="Filters\AjaxOnlyAttribute.cs" />
+    <Compile Include="Filters\RequireReferrerAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Filters\CultureAttribute.cs" />
     <Compile Include="Results\MultipleActionResult.cs" />

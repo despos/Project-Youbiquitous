@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>youbiquitous-mvc-lib</id>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <title>Youbiquitous ASP.NET MVC</title>
     <authors>Expoware Soft (Dino Esposito)</authors>
     <owners>Dino Esposito</owners>
