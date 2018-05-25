@@ -7,7 +7,7 @@
 namespace Expoware.Youbiquitous.Core.Extensions
 {
     public static class BoolExtensions
-    {
+    { 
         /// <summary>
         /// Renders yes/no strings for the boolean
         /// </summary>
