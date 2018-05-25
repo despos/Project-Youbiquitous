@@ -143,7 +143,19 @@ namespace Expoware.Youbiquitous.Core.Extensions
                 return null;
             }
         }
-        
+
+        /// <summary>
+        /// Strips some HTML chars from the given string
+        /// </summary>
+        /// <param name="theString">Original string</param>
+        /// <returns>Modified string</returns>
+        public static string StripHtml(this String theString)
+        {
+            var stripped = Regex.Replace(theString, @"<[^>]+>|&nbsp;", "").Trim();
+            stripped = Regex.Replace(stripped, @"\s{2,}", " ");
+            return stripped;
+        }
+
         /// <summary>
         /// Inserts the string into the specified format string
         /// </summary>

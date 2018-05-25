@@ -37,7 +37,8 @@ namespace Expoware.Youbiquitous.Mvc.Filters
             if (referrer == null)
                 return false;
             var list = new List<string>(TrustedServers);
-            return list.Any(ts => referrer.AbsoluteUri.ToLower().StartsWith(ts.ToLower()));
+            var url = referrer.AbsoluteUri.ToLower();
+            return list.Any(ts => url.StartsWith(ts.ToLower()));
         }      
     }
 }
